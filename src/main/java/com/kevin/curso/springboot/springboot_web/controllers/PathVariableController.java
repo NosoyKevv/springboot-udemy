@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 @RestController
@@ -14,12 +15,23 @@ public class PathVariableController {
 
     @Value("${config.code}")
     private String code;
+
+    @Value("#{' ${config.listOfValue}'.split(',') }")
+//cuando incluimos dos {{}} la del medio es la variable y luego con las '' ya seria un string y podemos usar el split para dividir ese string por comas
+    private List<String> listOfValueString;
+
+    @Value("#{'${config.listOfValue}'.toUpperCase()}")
+    private String listString;
+
+
     @Value("${config.username}")
     private String username;
+
     @Value("${config.message}")
     private String message;
+
     @Value("${config.listOfValue}")
-    private String[] listOfValue;
+    private List<String> listOfValue;
 
 
     @GetMapping("baz/{message}") //ENVIAR UN SOLO PARAMETRO /
@@ -51,7 +63,9 @@ public class PathVariableController {
         Map<String, Object> json = new HashMap<>();
         json.put("username", username);
         json.put("message", message);
+        json.put("listString", listString);
         json.put("listOfValue", listOfValue);
+        json.put("listOfValueString", listOfValueString);
         json.put("code", code);
         return json;
     }
